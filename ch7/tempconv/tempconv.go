@@ -13,9 +13,16 @@ import (
 
 type Celsius float64
 type Fahrenheit float64
+type Kelvin float64
 
 func CToF(c Celsius) Fahrenheit { return Fahrenheit(c*9.0/5.0 + 32.0) }
 func FToC(f Fahrenheit) Celsius { return Celsius((f - 32.0) * 5.0 / 9.0) }
+func KtoC(k Kelvin) Celsius  {
+	return Celsius(k-273.15)
+}
+func KtoF(k Kelvin) Fahrenheit  {
+	return CToF(KtoC(k))
+}
 
 func (c Celsius) String() string { return fmt.Sprintf("%g°C", c) }
 
@@ -45,6 +52,9 @@ func (f *celsiusFlag) Set(s string) error {
 		return nil
 	case "F", "°F":
 		f.Celsius = FToC(Fahrenheit(value))
+		return nil
+	case "K", "°K":
+		f.Celsius = KtoC(Kelvin(value))
 		return nil
 	}
 	return fmt.Errorf("invalid temperature %q", s)
